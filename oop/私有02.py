@@ -74,3 +74,148 @@ suger = Dog()  # 初始化的时候就调用了__init__
 
 suger = paxingAni("suger")  # 爬行动物的构造函数,带了name的参数
 
+print("----"*5+"魔法函数"+"----"*5)
+# __init,__call__ ,__str__ 举例
+class A():
+    def __init__(self):
+        print("我被调用了")
+
+    def __call__(self, *args, **kwargs):
+        print("我又被调用了again")
+
+    def __str__(self):
+        return "返回一个字符串"
+
+    def __repr__(self):
+        return "我不用使用print"
+a =A()
+
+a()  # 对象当函数调用的时候调用
+print(a)
+help(getattr)
+
+
+
+## __setattr__案例
+
+class P():
+    def __init__(self):
+        pass
+
+    def __setattr__(self, key, value):
+        print("设置属性 :{0}".format(key))
+        # self.key = value   这句会造成死循环
+
+        super().__setattr__(key,value)
+
+p = P()
+p.age = 18
+
+
+
+## 运算类 __gt__
+
+class Player():
+    def __init__(self,name):
+        self._name = name
+
+    def __gt__(self,obj):
+        print("哈哈,{0}会比{1}大吗?".format(self,obj))
+        return self._name > obj._name
+
+p1 = Player("ONE")
+p2 = Player("two")
+print(p1>p2)
+
+
+
+#三种方法的案例
+
+class Person():
+
+    # 实例方法方法
+    def eat(self):
+        print(self)
+        print("eating...")
+
+    # 类方法
+    @classmethod
+    def play(cls):
+        print(cls)
+        print("playing...")
+
+    #静态方法,不需要用第一个参数表示自身或类
+    @staticmethod
+    def say():
+        print("saying")
+
+
+p = Person()
+#实例方法
+p.eat()
+
+# 对象也可以调用类方法,
+p.play()
+Person.play()
+
+#静态方法  (不能修改,比如获取当前时间)
+
+p.say()
+Person.say()
+
+print("*"*20)
+
+
+## 类属性的property的应用场景
+class A():
+    def __init__(self):
+        self.name= "网打哈"
+        self.age = 18
+
+    def fget(self):
+        print("我被读取了")
+        return self.name
+    def fset(self,something):
+        self.name = "图灵学院"+something
+
+    def fdel(self):
+        print("不能删除了")
+        pass
+
+    something = property(fget,fset,fdel,"这是说明文档")
+
+a = A()
+print(a.name)
+
+print(a.something)
+del a.something
+a.something = "隔壁老王"
+print(a.something)
+
+
+print("抽象类,接口"+"*"*20)
+
+#抽象类的实现
+import abc
+
+#声明一个类并且指定当前类的元类
+class Human(metaclass=abc.ABCMeta):
+
+    # 定义一个抽象方法
+    @abc.abstractmethod
+    def smoking(self):
+        pass
+
+    #定义类抽象方法
+    @abc.abstractclassmethod
+    def drink():
+        pass
+
+    #定义静态抽象方法
+    @abc.abstractstaticmethod
+    def play():
+        pass
+
+
+
+## 函数名可以当变量来用
